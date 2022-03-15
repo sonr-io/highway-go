@@ -182,7 +182,6 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 		signature := p.Response.Attestation.AuthData.AttestedCredentialData.CredentialID
 		ctrl.AttachDid(ctx, placeHolderDid, string(signature))
 
-		req.Body.Close() //  must close
 		req.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 		// get user
