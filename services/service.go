@@ -115,10 +115,10 @@ func AuthRegisterBegin(ctrl *controller.Controller) http.HandlerFunc {
 		user := ctrl.FindUserByName(ctx, name)
 
 		// user doesn't exist, create new user
-		if user.DisplayName != "" {
+		if user.DisplayName == "" {
 
-			taken, _ := ctrl.CheckName(ctx, name)
-			if taken {
+			available, _ := ctrl.CheckName(ctx, name)
+			if !available {
 				jsonResponse(w, fmt.Errorf("username is not availabel to use"), http.StatusAlreadyReported)
 				return
 			}
