@@ -34,13 +34,13 @@ func AddHandlers(r *mux.Router, ctrl *controller.Controller) {
 	r.HandleFunc("/jwt/generate/{did}", GenerateJWT(ctrl)).Methods("POST").Schemes("http")
 
 	// Start a new account registeration
-	r.HandleFunc("/auth/register/begin/{signature}", AuthRegisterBegin(ctrl)).Methods("POST").Schemes("http")
+	r.HandleFunc("/auth/register/begin/{signature}", AuthRegisterBegin(ctrl)).Methods("GET").Schemes("http")
 
 	// Finish an account registeration
 	r.HandleFunc("/auth/register/finish/{signature}", AuthRegisterFinish(ctrl)).Methods("POST").Schemes("http")
 
 	// Begin login to an existig account
-	r.HandleFunc("/auth/login/begin/{signature}", AuthLoginBegin(ctrl)).Methods("POST").Schemes("http")
+	r.HandleFunc("/auth/login/begin/{signature}", AuthLoginBegin(ctrl)).Methods("GET").Schemes("http")
 
 	// Finish logging in to an existing account
 	r.HandleFunc("/auth/login/finish/{signature}", AuthLoginFinish(ctrl)).Methods("POST").Schemes("http")
