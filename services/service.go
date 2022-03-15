@@ -32,7 +32,7 @@ func AddHandlers(r *mux.Router, ctrl *controller.Controller) {
 	r.HandleFunc("/jwt/generate/{did}", GenerateJWT(ctrl)).Methods("POST").Schemes("http")
 
 	// Start a new account registeration
-	r.HandleFunc("/auth/register/begin/{username}", AuthRegisterBegin(ctrl)).Methods("GET").Schemes("http")
+	r.HandleFunc("/auth/register/begin/{username}", AuthRegisterBegin(ctrl)).Methods("POST").Schemes("http")
 
 	// Finish an account registeration
 	r.HandleFunc("/auth/register/finish/{username}", AuthRegisterFinish(ctrl)).Methods("POST").Schemes("http")
@@ -115,11 +115,11 @@ func AuthRegisterBegin(ctrl *controller.Controller) http.HandlerFunc {
 		user := ctrl.FindUserByName(ctx, name)
 
 		// user doesn't exist, create new user
-		if user.DisplayName == "" {
+		if user.DisplayName != "" {
 
 			taken, _ := ctrl.CheckName(ctx, name)
 			if taken {
-				jsonResponse(w, fmt.Errorf("username is not availabel to use"), http.StatusBadRequest)
+				jsonResponse(w, fmt.Errorf("username is not availabel to use"), http.StatusAlreadyReported)
 				return
 			}
 			var names []string
