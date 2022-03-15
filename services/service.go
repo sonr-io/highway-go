@@ -39,6 +39,12 @@ func AddHandlers(r *mux.Router, ctrl *controller.Controller) {
 	// Finish an account registeration
 	r.HandleFunc("/auth/register/finish/{signature}", AuthRegisterFinish(ctrl)).Methods("POST").Schemes("http")
 
+	// Begin login to an existig account
+	r.HandleFunc("/auth/login/begin/{signature}", AuthLoginBegin(ctrl)).Methods("POST").Schemes("http")
+
+	// Finish logging in to an existing account
+	r.HandleFunc("/auth/login/finish/{signature}", AuthLoginFinish(ctrl)).Methods("POST").Schemes("http")
+
 	// check name
 	r.HandleFunc("/check/name/{name}", CheckName(ctrl)).Methods("GET").Schemes("http")
 
@@ -164,6 +170,62 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 		}
 
 		ctrl.WebAuth.FinishRegistration(req, w, user, sess)
+	}
+}
+
+func AuthLoginBegin(ctrl *controller.Controller) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		ctx := req.Context()
+		vars := mux.Vars(req)
+		signature := vars["signature"]
+
+		// get user
+		did := "did:sonr:" + signature
+		user := ctrl.FindDid(ctx, did)
+		// user doesn't exist
+		if user.Did == "" {
+			jsonResponse(w, fmt.Errorf("must supply a valid signature for account"), http.StatusBadRequest)
+			return
+		}
+
+		// Get a session.
+		sess, _ := store.Get(req, signature)
+
+		// generate PublicKeyCredentialCreationOptions, session data
+		ctrl.WebAuth.StartLogin(req, w, user, webauthn.WrapMap(sess.Values))
+
+		// store session data as marshaled JSON
+		err := sess.Save(req, w)
+		if err != nil {
+			jsonResponse(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func AuthLoginFinish(ctrl *controller.Controller) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		ctx := req.Context()
+		vars := mux.Vars(req)
+		signature := vars["signature"]
+
+		// get user
+		did := "did:sonr:" + signature
+		user := ctrl.FindDid(ctx, did)
+		// user doesn't exist
+		if user.Did == "" {
+			jsonResponse(w, fmt.Errorf("must supply a valid signature for account"), http.StatusBadRequest)
+			return
+		}
+
+		// load the session data
+		sess, err := store.Get(req, signature)
+		if err != nil {
+			jsonResponse(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		ctrl.WebAuth.FinishLogin(req, w, user, sess)
 	}
 }
 
