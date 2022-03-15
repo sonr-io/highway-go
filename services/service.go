@@ -9,11 +9,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 	"github.com/kataras/golog"
 	"github.com/koesie10/webauthn/protocol"
 	"github.com/koesie10/webauthn/webauthn"
@@ -106,8 +104,6 @@ func GenerateJWT(ctrl *controller.Controller) http.HandlerFunc {
 	}
 }
 
-var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
-
 func AuthRegisterBegin(ctrl *controller.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
@@ -144,7 +140,7 @@ func AuthRegisterBegin(ctrl *controller.Controller) http.HandlerFunc {
 
 		// Get a session. We're ignoring the error resulted from decoding an
 		// existing session: Get() always returns a session, even if empty.
-		sess, _ := store.Get(req, name)
+		sess, _ := ctrl.Store.Get(req, name)
 
 		// generate PublicKeyCredentialCreationOptions, session data
 		ctrl.WebAuth.StartRegistration(req, w, user, webauthn.WrapMap(sess.Values))
@@ -171,14 +167,13 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 		d := json.NewDecoder(req.Body)
 		d.DisallowUnknownFields()
 		if err := d.Decode(&attestationResponse); err != nil {
-			//TODO throw decode error
-			//w.writeError(req, w, protocol.ErrInvalidRequest.WithDebug(err.Error()))
+			jsonResponse(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		p, err := protocol.ParseAttestationResponse(attestationResponse)
 		if err != nil {
-			//TODO throw decode error
+			jsonResponse(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -199,7 +194,7 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 		}
 
 		// load the session data
-		sess, err := store.Get(req, name)
+		sess, err := ctrl.Store.Get(req, name)
 		if err != nil {
 			jsonResponse(w, err.Error(), http.StatusBadRequest)
 			return
@@ -225,7 +220,7 @@ func AuthLoginBegin(ctrl *controller.Controller) http.HandlerFunc {
 		}
 
 		// Get a session.
-		sess, _ := store.Get(req, name)
+		sess, _ := ctrl.Store.Get(req, name)
 
 		// generate PublicKeyCredentialCreationOptions, session data
 		ctrl.WebAuth.StartLogin(req, w, user, webauthn.WrapMap(sess.Values))
@@ -255,7 +250,7 @@ func AuthLoginFinish(ctrl *controller.Controller) http.HandlerFunc {
 		}
 
 		// load the session data
-		sess, err := store.Get(req, name)
+		sess, err := ctrl.Store.Get(req, name)
 		if err != nil {
 			jsonResponse(w, err.Error(), http.StatusBadRequest)
 			return

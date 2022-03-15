@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gorilla/sessions"
 	"github.com/kataras/jwt"
 	"github.com/koesie10/webauthn/webauthn"
 	"github.com/sonr-io/highway-go/config"
@@ -22,6 +23,7 @@ type Controller struct {
 	devAccount  string
 	WebAuth     *webauthn.WebAuthn
 	highwayStub *models.HighwayStub
+	Store       *sessions.CookieStore
 }
 
 func New(mongoClient db.MongoClient, cnfg *config.SonrConfig, stub *models.HighwayStub, auth *webauthn.WebAuthn) (*Controller, error) {
@@ -31,6 +33,7 @@ func New(mongoClient db.MongoClient, cnfg *config.SonrConfig, stub *models.Highw
 		devAccount:  cnfg.DevAccount,
 		WebAuth:     auth,
 		highwayStub: stub,
+		Store:       sessions.NewCookieStore([]byte(cnfg.SessionKey)),
 	}, nil
 }
 

@@ -111,6 +111,7 @@ func Load() (*SonrConfig, error) {
 		MongoDbName:         viper.GetString("MONGO_DB_NAME"),
 		SecretKey:           viper.GetString("SECRET_KEY"),
 		DevAccount:          viper.GetString("DEV_ACCOUNT"),
+		SessionKey:          viper.GetString("SESSION_KEY"),
 	}
 
 	config.Save()
