@@ -253,7 +253,17 @@ func AuthLoginFinish(ctrl *controller.Controller) http.HandlerFunc {
 			return
 		}
 
-		ctrl.WebAuth.FinishLogin(req, w, user, sess)
+		auth := ctrl.WebAuth.FinishLogin(req, w, user, sess)
+
+		js, err := json.Marshal(auth)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(js)
+
 	}
 }
 
