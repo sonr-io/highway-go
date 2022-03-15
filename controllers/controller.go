@@ -64,6 +64,10 @@ func (ctrl *Controller) FindDid(ctx context.Context, did string) *models.User {
 	return ctrl.client.FindDid(did)
 }
 
+func (ctrl *Controller) AttachDid(ctx context.Context, placeHolderDid string, newDid string) error {
+	return ctrl.client.AttachDid(placeHolderDid, newDid)
+}
+
 func (ctrl *Controller) AddCreds(ctx context.Context, user webauthn.User, authenticator webauthn.Authenticator) error {
 	return ctrl.client.AddAuthenticator(user, authenticator)
 }

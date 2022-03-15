@@ -92,3 +92,12 @@ func (db *MongoClient) FindUserByName(name string) *models.User {
 	collection.FindOne(ctx, bson.M{"name": name}).Decode(user)
 	return &user
 }
+
+func (db *MongoClient) AttachDid(placeHolderDid string, newDid string) error {
+	collection := db.registerColl
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	user := models.User{}
+	collection.FindOneAndUpdate(ctx, bson.M{"did": placeHolderDid}, bson.M{"$set": bson.M{"did": newDid}}).Decode(user)
+	return nil
+}

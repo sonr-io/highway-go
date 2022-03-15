@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
@@ -14,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/kataras/golog"
+	"github.com/koesie10/webauthn/protocol"
 	"github.com/koesie10/webauthn/webauthn"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -128,8 +130,10 @@ func AuthRegisterBegin(ctrl *controller.Controller) http.HandlerFunc {
 			}
 			var names []string
 			names = append(names, name)
+			did := "did:sonr:temp" + name
 			user.DisplayName = name
 			user.Names = names
+			user.Did = did
 
 			ctrl.NewUser(ctx, *user)
 		}
@@ -159,6 +163,32 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 		ctx := req.Context()
 		vars := mux.Vars(req)
 		name := vars["username"]
+
+		//get signature
+		bodyBytes, _ := ioutil.ReadAll(req.Body)
+
+		var attestationResponse protocol.AttestationResponse
+		d := json.NewDecoder(req.Body)
+		d.DisallowUnknownFields()
+		if err := d.Decode(&attestationResponse); err != nil {
+			//TODO throw decode error
+			//w.writeError(req, w, protocol.ErrInvalidRequest.WithDebug(err.Error()))
+			return
+		}
+
+		p, err := protocol.ParseAttestationResponse(attestationResponse)
+		if err != nil {
+			//TODO throw decode error
+			return
+		}
+
+		// attach signature to did
+		placeHolderDid := "did:sonr:temp" + name
+		signature := p.Response.Attestation.AuthData.AttestedCredentialData.CredentialID
+		ctrl.AttachDid(ctx, placeHolderDid, string(signature))
+
+		req.Body.Close() //  must close
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 		// get user
 		user := ctrl.FindUserByName(ctx, name)
