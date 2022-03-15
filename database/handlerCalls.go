@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -10,7 +11,8 @@ import (
 )
 
 type RecordNameObj struct {
-	Name string `json:"name"`
+	Name  string   `json:"name"`
+	Names []string `json:"names"`
 	// TimeStamp time.Time
 }
 
@@ -41,13 +43,13 @@ func (db *MongoClient) AddDid(did string, jwt models.Jwt) error {
 	return nil
 }
 
-func (db *MongoClient) StoreRecord(recordObj RecordNameObj, did string) bool {
+func (db *MongoClient) StoreRecord(nameToRecord string, did string) bool {
 	collection := db.registerColl
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	q1 := bson.M{"did": did}
-	q2 := bson.M{"$addToSet": bson.M{"name": recordObj.Name}}
+	q2 := bson.M{"$addToSet": bson.M{"names": nameToRecord}}
 
 	record := models.User{}
 	collection.FindOne(ctx, q1).Decode(&record)
@@ -65,11 +67,13 @@ func (db *MongoClient) CheckName(name string) (bool, error) {
 	collection := db.registerColl
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	result, err := collection.CountDocuments(ctx, bson.M{"name": name})
+	result, err := collection.CountDocuments(ctx, bson.M{"names": name})
 
 	if err != nil {
 		return false, err
 	}
+
+	fmt.Println(result)
 
 	return result == 0, nil
 }
@@ -87,7 +91,7 @@ func (db *MongoClient) FindUserByName(name string) *models.User {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	user := models.User{}
-	collection.FindOne(ctx, bson.M{"name": name}).Decode(user)
+	collection.FindOne(ctx, bson.M{"names": name}).Decode(user)
 	return &user
 }
 

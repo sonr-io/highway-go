@@ -349,7 +349,7 @@ func RecordName(ctrl *controller.Controller) http.HandlerFunc {
 			return
 		}
 
-		err = ctrl.InsertRecord(ctx, recObj, did)
+		err = ctrl.InsertRecord(ctx, recObj.Name, did)
 
 		if err != nil {
 			w.WriteHeader(http.StatusExpectationFailed)

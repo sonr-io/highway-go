@@ -45,8 +45,8 @@ func (ctrl *Controller) CheckName(ctx context.Context, name string) (bool, error
 	return result, nil
 }
 
-func (ctrl *Controller) InsertRecord(ctx context.Context, recordObj db.RecordNameObj, did string) error {
-	successful := ctrl.client.StoreRecord(recordObj, did)
+func (ctrl *Controller) InsertRecord(ctx context.Context, name string, did string) error {
+	successful := ctrl.client.StoreRecord(name, did)
 
 	if !successful {
 		return errors.New("mongo error in insert record")
@@ -137,7 +137,7 @@ func (ctrl *Controller) RegisterName(ctx context.Context, req *rt.MsgRegisterNam
 	}
 
 	if success {
-		ctrl.client.StoreRecord(db.RecordNameObj{Name: req.NameToRegister}, did)
+		ctrl.client.StoreRecord(req.NameToRegister, did)
 	}
 
 	// WTF
