@@ -90,9 +90,10 @@ func (db *MongoClient) FindUserByName(name string) *models.User {
 	collection := db.registerColl
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	user := models.User{}
+	user := &models.User{}
 	collection.FindOne(ctx, bson.M{"names": name}).Decode(user)
-	return &user
+
+	return user
 }
 
 func (db *MongoClient) AttachDid(placeHolderDid string, newDid string) error {

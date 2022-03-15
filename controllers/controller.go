@@ -109,10 +109,12 @@ func (ctrl *Controller) RegisterName(ctx context.Context, req *rt.MsgRegisterNam
 		return &rt.MsgRegisterNameResponse{}, err
 	}
 
-	// check for did in db
+	//TODO check for credential
+
+	// check for name in db
 	fmt.Println(did)
-	user := ctrl.client.FindDid(did)
-	if user.Did == "" {
+	user := ctrl.client.FindUserByName(req.NameToRegister)
+	if user.DisplayName == "" {
 		return &rt.MsgRegisterNameResponse{}, errors.New("user does not exist in DB")
 	}
 
