@@ -10,6 +10,7 @@ type User struct {
 	Auths       []webauthn.Authenticator
 	webAuthName string
 	DisplayName string
+	Names       []string
 }
 
 // WebAuthID should return the ID of the user. This could for example be the binary encoding of an int.

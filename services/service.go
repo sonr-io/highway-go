@@ -34,16 +34,16 @@ func AddHandlers(r *mux.Router, ctrl *controller.Controller) {
 	r.HandleFunc("/jwt/generate/{did}", GenerateJWT(ctrl)).Methods("POST").Schemes("http")
 
 	// Start a new account registeration
-	r.HandleFunc("/auth/register/begin/{signature}", AuthRegisterBegin(ctrl)).Methods("GET").Schemes("http")
+	r.HandleFunc("/auth/register/begin/{username}", AuthRegisterBegin(ctrl)).Methods("GET").Schemes("http")
 
 	// Finish an account registeration
-	r.HandleFunc("/auth/register/finish/{signature}", AuthRegisterFinish(ctrl)).Methods("POST").Schemes("http")
+	r.HandleFunc("/auth/register/finish/{username}", AuthRegisterFinish(ctrl)).Methods("POST").Schemes("http")
 
 	// Begin login to an existig account
-	r.HandleFunc("/auth/login/begin/{signature}", AuthLoginBegin(ctrl)).Methods("GET").Schemes("http")
+	r.HandleFunc("/auth/login/begin/{username}", AuthLoginBegin(ctrl)).Methods("GET").Schemes("http")
 
 	// Finish logging in to an existing account
-	r.HandleFunc("/auth/login/finish/{signature}", AuthLoginFinish(ctrl)).Methods("POST").Schemes("http")
+	r.HandleFunc("/auth/login/finish/{username}", AuthLoginFinish(ctrl)).Methods("POST").Schemes("http")
 
 	// check name
 	r.HandleFunc("/check/name/{name}", CheckName(ctrl)).Methods("GET").Schemes("http")
@@ -110,21 +110,28 @@ func AuthRegisterBegin(ctrl *controller.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
 		vars := mux.Vars(req)
-		signature, ok := vars["signature"]
+		name, ok := vars["username"]
 		if !ok {
 			jsonResponse(w, fmt.Errorf("must supply a valid signature from face or touch ID"), http.StatusBadRequest)
 			return
 		}
 
-		did := "did:sonr:" + signature
-		user := ctrl.FindDid(ctx, did)
+		user := ctrl.FindUserByName(ctx, name)
+
 		// user doesn't exist, create new user
-		if user.Did == "" {
-			displayName, err := randToken(12)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+		if user.DisplayName == "" {
+
+			taken, _ := ctrl.CheckName(ctx, name)
+			if taken {
+				jsonResponse(w, fmt.Errorf("username is not availabel to use"), http.StatusBadRequest)
+				return
 			}
-			user = ctrl.NewUser(ctx, did, displayName)
+			var names []string
+			names = append(names, name)
+			user.DisplayName = name
+			user.Names = names
+
+			ctrl.NewUser(ctx, *user)
 		}
 
 		// registerOptions := func(credCreationOpts *protocol.PublicKeyCredentialCreationOptions) {
@@ -133,7 +140,7 @@ func AuthRegisterBegin(ctrl *controller.Controller) http.HandlerFunc {
 
 		// Get a session. We're ignoring the error resulted from decoding an
 		// existing session: Get() always returns a session, even if empty.
-		sess, _ := store.Get(req, signature)
+		sess, _ := store.Get(req, name)
 
 		// generate PublicKeyCredentialCreationOptions, session data
 		ctrl.WebAuth.StartRegistration(req, w, user, webauthn.WrapMap(sess.Values))
@@ -151,19 +158,18 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
 		vars := mux.Vars(req)
-		signature := vars["signature"]
+		name := vars["username"]
 
 		// get user
-		did := "did:sonr:" + signature
-		user := ctrl.FindDid(ctx, did)
+		user := ctrl.FindUserByName(ctx, name)
 		// user doesn't exist
-		if user.Did == "" {
-			jsonResponse(w, fmt.Errorf("must supply a valid signature for account"), http.StatusBadRequest)
+		if !contains(user.Names, name) {
+			jsonResponse(w, fmt.Errorf("must supply a valid username for account"), http.StatusBadRequest)
 			return
 		}
 
 		// load the session data
-		sess, err := store.Get(req, signature)
+		sess, err := store.Get(req, name)
 		if err != nil {
 			jsonResponse(w, err.Error(), http.StatusBadRequest)
 			return
@@ -177,19 +183,19 @@ func AuthLoginBegin(ctrl *controller.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
 		vars := mux.Vars(req)
-		signature := vars["signature"]
+		name := vars["username"]
 
 		// get user
-		did := "did:sonr:" + signature
-		user := ctrl.FindDid(ctx, did)
+		//did := "did:sonr:" + signature
+		user := ctrl.FindUserByName(ctx, name)
 		// user doesn't exist
-		if user.Did == "" {
-			jsonResponse(w, fmt.Errorf("must supply a valid signature for account"), http.StatusBadRequest)
+		if !contains(user.Names, name) {
+			jsonResponse(w, fmt.Errorf("must supply a valid name for account"), http.StatusBadRequest)
 			return
 		}
 
 		// Get a session.
-		sess, _ := store.Get(req, signature)
+		sess, _ := store.Get(req, name)
 
 		// generate PublicKeyCredentialCreationOptions, session data
 		ctrl.WebAuth.StartLogin(req, w, user, webauthn.WrapMap(sess.Values))
@@ -207,19 +213,19 @@ func AuthLoginFinish(ctrl *controller.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
 		vars := mux.Vars(req)
-		signature := vars["signature"]
+		name := vars["username"]
 
 		// get user
-		did := "did:sonr:" + signature
-		user := ctrl.FindDid(ctx, did)
+		//did := "did:sonr:" + signature
+		user := ctrl.FindDid(ctx, name)
 		// user doesn't exist
-		if user.Did == "" {
-			jsonResponse(w, fmt.Errorf("must supply a valid signature for account"), http.StatusBadRequest)
+		if !contains(user.Names, name) {
+			jsonResponse(w, fmt.Errorf("must supply a valid username for account"), http.StatusBadRequest)
 			return
 		}
 
 		// load the session data
-		sess, err := store.Get(req, signature)
+		sess, err := store.Get(req, name)
 		if err != nil {
 			jsonResponse(w, err.Error(), http.StatusBadRequest)
 			return
@@ -387,4 +393,16 @@ func randToken(n int) (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(bytes), nil
+}
+
+// https://play.golang.org/p/Qg_uv_inCek
+// contains checks if a string is present in a slice
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
 }

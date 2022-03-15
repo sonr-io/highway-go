@@ -52,8 +52,12 @@ func (ctrl *Controller) InsertRecord(ctx context.Context, recordObj db.RecordNam
 	return nil
 }
 
-func (ctrl *Controller) NewUser(ctx context.Context, did string, displayName string) *models.User {
-	return ctrl.client.NewUser(did, displayName)
+func (ctrl *Controller) NewUser(ctx context.Context, user models.User) error {
+	return ctrl.client.NewUser(user)
+}
+
+func (ctrl *Controller) FindUserByName(ctx context.Context, name string) *models.User {
+	return ctrl.client.FindUserByName(name)
 }
 
 func (ctrl *Controller) FindDid(ctx context.Context, did string) *models.User {
