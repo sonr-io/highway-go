@@ -317,7 +317,7 @@ func RecordName(ctrl *controller.Controller) http.HandlerFunc {
 			w.WriteHeader(http.StatusExpectationFailed)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 	}
 }
 
