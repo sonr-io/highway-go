@@ -1,7 +1,6 @@
 package service
 
 import (
-	"bytes"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
@@ -13,7 +12,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/kataras/golog"
-	"github.com/koesie10/webauthn/protocol"
 	"github.com/koesie10/webauthn/webauthn"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -161,28 +159,28 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 		name := vars["username"]
 
 		//get signature
-		bodyBytes, _ := ioutil.ReadAll(req.Body)
+		//bodyBytes, _ := ioutil.ReadAll(req.Body)
 
-		var attestationResponse protocol.AttestationResponse
-		d := json.NewDecoder(req.Body)
-		d.DisallowUnknownFields()
-		if err := d.Decode(&attestationResponse); err != nil {
-			jsonResponse(w, err.Error(), http.StatusBadRequest)
-			return
-		}
+		// var attestationResponse protocol.AttestationResponse
+		// d := json.NewDecoder(req.Body)
+		// d.DisallowUnknownFields()
+		// if err := d.Decode(&attestationResponse); err != nil {
+		// 	jsonResponse(w, err.Error(), http.StatusBadRequest)
+		// 	return
+		// }
 
-		p, err := protocol.ParseAttestationResponse(attestationResponse)
-		if err != nil {
-			jsonResponse(w, err.Error(), http.StatusBadRequest)
-			return
-		}
+		// p, err := protocol.ParseAttestationResponse(attestationResponse)
+		// if err != nil {
+		// 	jsonResponse(w, err.Error(), http.StatusBadRequest)
+		// 	return
+		// }
 
-		// attach signature to did
-		placeHolderDid := "did:sonr:temp" + name
-		signature := p.Response.Attestation.AuthData.AttestedCredentialData.CredentialID
-		ctrl.AttachDid(ctx, placeHolderDid, string(signature))
+		// // attach signature to did
+		// placeHolderDid := "did:sonr:temp" + name
+		// signature := p.Response.Attestation.AuthData.AttestedCredentialData.CredentialID
+		// ctrl.AttachDid(ctx, placeHolderDid, string(signature))
 
-		req.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		// req.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 		// get user
 		user := ctrl.FindUserByName(ctx, name)
