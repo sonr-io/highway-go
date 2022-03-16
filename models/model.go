@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/sonr-io/sonr/pkg/p2p"
 	"github.com/tendermint/starport/starport/pkg/cosmosclient"
@@ -54,4 +55,14 @@ type Jwt struct {
 	//         authenticatorAttachment: "cross-platform",
 	//     },
 
+}
+
+type Verify struct {
+	VerifyID         string    `json:"verify_id"`
+	VerificationCode int       `json:"verification"`
+	PhoneNum         string    `json:"phone_num"`
+	CreatedAt        time.Time `json:"created_at"`
+	Verified         bool      `json:"verified"`
+	Attempts         int       `json:"attempts"`
+	VerifyOpenDate   time.Time `json:"verify_open_date"`
 }

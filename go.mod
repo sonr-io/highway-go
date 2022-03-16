@@ -14,6 +14,7 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.0
 	github.com/tendermint/starport v0.19.2
+	github.com/twilio/twilio-go v0.22.2
 	go.buf.build/grpc/go/sonr-io/highway v1.2.24
 	go.buf.build/grpc/go/sonr-io/sonr v1.2.14
 	go.mongodb.org/mongo-driver v1.8.4
@@ -59,6 +60,7 @@ require (
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
 	github.com/gogo/protobuf v1.3.3 // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/btree v1.0.0 // indirect
 	github.com/google/gopacket v1.1.19 // indirect
@@ -210,13 +212,13 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
 	golang.org/x/crypto v0.0.0-20211215165025-cf75a172585e // indirect
-	golang.org/x/mod v0.5.0 // indirect
+	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220307203707-22a9840ba4d7 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/tools v0.1.7 // indirect
+	golang.org/x/tools v0.1.9 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/genproto v0.0.0-20220308174144-ae0e22291548 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
