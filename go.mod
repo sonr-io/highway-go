@@ -14,7 +14,6 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.0
 	github.com/tendermint/starport v0.19.2
-	github.com/twilio/twilio-go v0.22.2
 	go.buf.build/grpc/go/sonr-io/highway v1.2.24
 	go.buf.build/grpc/go/sonr-io/sonr v1.2.14
 	go.mongodb.org/mongo-driver v1.8.4
@@ -195,6 +194,7 @@ require (
 	github.com/tendermint/go-amino v0.16.0 // indirect
 	github.com/tendermint/tendermint v0.34.14 // indirect
 	github.com/tendermint/tm-db v0.6.4 // indirect
+	github.com/twilio/twilio-go v0.22.2 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	github.com/whyrusleeping/go-keyspace v0.0.0-20160322163242-5b898ac5add1 // indirect
 	github.com/whyrusleeping/multiaddr-filter v0.0.0-20160516205228-e903e4adabd7 // indirect

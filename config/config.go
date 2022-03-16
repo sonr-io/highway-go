@@ -81,6 +81,9 @@ type SonrConfig struct {
 
 	// session key
 	SessionKey string `json:"session_key"`
+
+	//twilio
+	AccountSid string `json:"session_key"`
 }
 
 func (sc *SonrConfig) Save() (*SonrConfig, error) {
