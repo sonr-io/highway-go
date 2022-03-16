@@ -197,7 +197,9 @@ func AuthRegisterFinish(ctrl *controller.Controller) http.HandlerFunc {
 			return
 		}
 
-		ctrl.WebAuth.FinishRegistration(req, w, user, sess)
+		auth := ctrl.WebAuth.FinishRegistration(req, w, user, sess)
+		placeHolder := "did:sonr:temp" + name
+		ctrl.AttachDid(ctx, placeHolder, string(auth.WebAuthPublicKey()))
 	}
 }
 
@@ -208,7 +210,7 @@ func AuthLoginBegin(ctrl *controller.Controller) http.HandlerFunc {
 		name := vars["username"]
 
 		// get user
-		//did := "did:sonr:" + signature
+		//did := "did:sonr:" + name
 		user := ctrl.FindUserByName(ctx, name)
 		// user doesn't exist
 		if !contains(user.Names, name) {
