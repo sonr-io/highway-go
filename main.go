@@ -14,11 +14,6 @@ import (
 
 func main() {
 
-	var err error = nil
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// This loads the information from the configuration file into a struct
 	cnfg, err := config.Load()
 	if err != nil {

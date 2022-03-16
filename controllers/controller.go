@@ -6,7 +6,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gorilla/sessions"
 	"github.com/kataras/jwt"
+	"github.com/koesie10/webauthn/webauthn"
 	"github.com/sonr-io/highway-go/config"
 	db "github.com/sonr-io/highway-go/database"
 	"github.com/sonr-io/highway-go/models"
@@ -19,15 +21,19 @@ type Controller struct {
 	client      db.MongoClient
 	privateKey  string
 	devAccount  string
+	WebAuth     *webauthn.WebAuthn
 	highwayStub *models.HighwayStub
+	Store       *sessions.CookieStore
 }
 
-func New(mongoClient db.MongoClient, cnfg *config.SonrConfig, stub *models.HighwayStub) (*Controller, error) {
+func New(mongoClient db.MongoClient, cnfg *config.SonrConfig, stub *models.HighwayStub, auth *webauthn.WebAuthn) (*Controller, error) {
 	return &Controller{
 		client:      mongoClient,
 		privateKey:  cnfg.SecretKey,
 		devAccount:  cnfg.DevAccount,
+		WebAuth:     auth,
 		highwayStub: stub,
+		Store:       sessions.NewCookieStore([]byte(cnfg.SessionKey)),
 	}, nil
 }
 
@@ -39,14 +45,34 @@ func (ctrl *Controller) CheckName(ctx context.Context, name string) (bool, error
 	return result, nil
 }
 
-func (ctrl *Controller) InsertRecord(ctx context.Context, recordObj db.RecordNameObj, did string) error {
-	successful := ctrl.client.StoreRecord(recordObj, did)
+func (ctrl *Controller) InsertRecord(ctx context.Context, name string, did string) error {
+	successful := ctrl.client.StoreRecord(name, did)
 
 	if !successful {
 		return errors.New("mongo error in insert record")
 	}
 
 	return nil
+}
+
+func (ctrl *Controller) NewUser(ctx context.Context, user models.User) error {
+	return ctrl.client.NewUser(user)
+}
+
+func (ctrl *Controller) FindUserByName(ctx context.Context, name string) *models.User {
+	return ctrl.client.FindUserByName(name)
+}
+
+func (ctrl *Controller) FindDid(ctx context.Context, did string) *models.User {
+	return ctrl.client.FindDid(did)
+}
+
+func (ctrl *Controller) AttachDid(ctx context.Context, placeHolderDid string, newDid string) error {
+	return ctrl.client.AttachDid(placeHolderDid, newDid)
+}
+
+func (ctrl *Controller) AddCreds(ctx context.Context, user webauthn.User, authenticator webauthn.Authenticator) error {
+	return ctrl.client.AddAuthenticator(user, authenticator)
 }
 
 func (ctrl *Controller) GenerateDid(ctx context.Context, signature string, token string) ([]byte, error) {
@@ -83,10 +109,12 @@ func (ctrl *Controller) RegisterName(ctx context.Context, req *rt.MsgRegisterNam
 		return &rt.MsgRegisterNameResponse{}, err
 	}
 
-	// check for did in db
+	//TODO check for credential
+
+	// check for name in db
 	fmt.Println(did)
-	user := ctrl.client.FindDid(did)
-	if user.Did == "" {
+	user := ctrl.client.FindUserByName(req.NameToRegister)
+	if user.DisplayName == "" {
 		return &rt.MsgRegisterNameResponse{}, errors.New("user does not exist in DB")
 	}
 
@@ -111,7 +139,7 @@ func (ctrl *Controller) RegisterName(ctx context.Context, req *rt.MsgRegisterNam
 	}
 
 	if success {
-		ctrl.client.StoreRecord(db.RecordNameObj{Name: req.NameToRegister}, did)
+		ctrl.client.StoreRecord(req.NameToRegister, did)
 	}
 
 	// WTF

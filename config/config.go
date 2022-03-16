@@ -78,6 +78,12 @@ type SonrConfig struct {
 
 	//dev accoutn name for initial genesis block
 	DevAccount string `json:"dev_account"`
+
+	// session key
+	SessionKey string `json:"session_key"`
+
+	//twilio
+	AccountSid string `json:"session_key"`
 }
 
 func (sc *SonrConfig) Save() (*SonrConfig, error) {

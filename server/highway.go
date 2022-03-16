@@ -19,6 +19,7 @@ import (
 	"github.com/sonr-io/highway-go/models"
 	"github.com/sonr-io/highway-go/pkg/client"
 	service "github.com/sonr-io/highway-go/services"
+	webAuth "github.com/sonr-io/highway-go/webAuthN"
 	"google.golang.org/grpc/credentials"
 
 	hw "go.buf.build/grpc/go/sonr-io/highway/v1"
@@ -48,10 +49,16 @@ var (
 func Start(ctx context.Context, cnfg *config.SonrConfig) error {
 	r := mux.NewRouter()
 
-	// http setup
+	// DB setup
 	DB, err := db.Connect(cnfg.MongoUri, cnfg.MongoCollectionName, cnfg.MongoDbName)
 	if err != nil {
 		logger.Errorf("dtabase connection failed")
+	}
+
+	//web authn setup
+	auth, err := webAuth.New(cnfg, DB)
+	if err != nil {
+		return err
 	}
 
 	// Create the cosmos listener.
@@ -100,7 +107,7 @@ func Start(ctx context.Context, cnfg *config.SonrConfig) error {
 		logger.Infof("Starting RPC Service on %s", l.Addr().String())
 	}
 
-	httpCtrl, err := controller.New(*DB, cnfg, stub)
+	httpCtrl, err := controller.New(*DB, cnfg, stub, auth)
 	if err != nil {
 		return nil
 	}

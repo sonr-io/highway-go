@@ -31,13 +31,27 @@ type HighwayStub struct {
 	Channels map[string]channel.Channel
 }
 
-//TODO this needs work, fix this model, wtf are either of these fields???
+//get
+// no clear answer
+
+//give
+//did
+
+//TODO this needs work, remove soon
 type Jwt struct {
 	Snr        string `json:"snr"`
 	EthAddress string `json: "ethAddress"`
-}
 
-type User struct {
-	Did string
-	Jwt Jwt
+	// publickey.challenge.userID
+	// user: {
+	//         id: Uint8Array.from(
+	//             "UZSL85T9AFC", c => c.charCodeAt(0)),
+	//         name: "lee@webauthn.guide",
+	//         displayName: "Lee",
+	//     },
+	//     pubKeyCredParams: [{alg: -7, type: "public-key"}],
+	//     authenticatorSelection: {
+	//         authenticatorAttachment: "cross-platform",
+	//     },
+
 }
