@@ -239,7 +239,7 @@ func AuthLoginFinish(ctrl *controller.Controller) http.HandlerFunc {
 
 		// get user
 		//did := "did:sonr:" + signature
-		user := ctrl.FindDid(ctx, name)
+		user := ctrl.FindUserByName(ctx, name)
 		// user doesn't exist
 		if !contains(user.Names, name) {
 			jsonResponse(w, fmt.Errorf("must supply a valid username for account"), http.StatusBadRequest)
