@@ -34,16 +34,16 @@ jobs:
       run: curl https://get.starport.network/starport! | bash
 
     - name: build sonrd
-      run: ls; pwd; cd sonr; ls; pwd; starport version; starport chain build
+      run: cd sonr; starport chain build
 
-    - name: move back into root
+    - name: move back into parent directory
       run: cd ..
 
     - name: Build
-      run: go build -v highway-go/main.go
+      run: cd highway-go; go build main.go
 
     - name: Test
-      run: go test -v highway-go/...
+      run: go test -v ./...
 
 
 
