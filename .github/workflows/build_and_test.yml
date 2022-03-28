@@ -34,7 +34,7 @@ jobs:
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@develop
       with:
-          args: -h; pwd; ls
+          args: version
 
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@develop
