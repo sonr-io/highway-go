@@ -34,6 +34,11 @@ jobs:
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@develop
       with:
+          args: -h
+
+    - name: Issue Release Assets
+      uses: tendermint/starport/actions/cli@develop
+      with:
           args: chain build
 
     - name: move back into root
