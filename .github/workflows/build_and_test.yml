@@ -32,6 +32,7 @@ jobs:
       uses: tendermint/starport/actions/cli@develop
       with:
           args: chain build
+          path: sonr
 
     - name: Build
       run: go build -v highway-go/main.go
