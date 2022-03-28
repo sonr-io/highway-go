@@ -10,36 +10,16 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: sonr-io/sonr
+          fetch-depth: 0
+      - uses: actions/setup-go@v2
 
-    - name: Checkout highway
-      uses: actions/checkout@v3
-      with:
-        path: highway-go
-
-    - name: Checkout sonr
-      uses: actions/checkout@v3
-      with:
-        repository: sonr-io/sonr
-        path: sonr
-
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.17
-
-    - name: Install Starport
-      run: curl https://get.starport.network/starport! | bash
-
-    - name: build sonrd
-      run: ls; pwd; cd sonr; ls; pwd; starport version; starport chain --help; starport --help
-
-    - name: move back into root
-      run: cd ..
-
-    - name: Build
-      run: go build -v highway-go/main.go
-
-    - name: Test
-      run: go test -v highway-go/...
-
+      - name: Issue Release Assets
+        uses: tendermint/starport/actions/cli@develop
+        with:
+          args: chain build --release
