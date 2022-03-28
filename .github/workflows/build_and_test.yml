@@ -40,7 +40,7 @@ jobs:
       run: cd ..
 
     - name: Build
-      run: cd highway-go; go build main.go
+      run: cd highway-go; go tidy; go build main.go
 
     - name: Test
       run: go test -v ./...
