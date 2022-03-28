@@ -1,0 +1,57 @@
+name: Build_and_test_highway
+
+on:
+  push:
+    branches: [ release ]
+  pull_request:
+    branches: [ release ]
+
+jobs:
+
+  build_and_test:
+    runs-on: ubuntu-latest
+    environment: 
+      name: staging
+      url: ${STAGING_ADDRESS}
+    steps:
+
+    - name: Checkout highway
+      uses: actions/checkout@v3
+      with:
+        path: highway-go
+        fetch-depth: 0
+
+    - name: Checkout sonr
+      uses: actions/checkout@v3
+      with:
+        repository: sonr-io/sonr
+        fetch-depth: 0
+        path: sonr
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Install Starport
+      run: curl https://get.starport.network/starport! | bash
+
+    - name: build sonrd
+      run: cd sonr; starport chain build
+
+    - name: move back into parent directory
+      run: cd ..
+
+    - name: Build
+      run: cd highway-go; go mod tidy; go build main.go
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY }}
+        name: id_rsa # optional
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+        if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
+
+    - name: copy to staging server
+      run: scp highway-go ${SSH_USER}@${STAGING_ADDRESS}:${HIGHWAY_DEPLOY_LOCATION}/highway-go
