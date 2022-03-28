@@ -32,7 +32,7 @@ jobs:
       run: curl https://get.starport.network/starport! | bash
 
     - name: build sonrd
-      run: ls; pwd; cd sonr; ls; pwd; starport version; starport chain build
+      run: ls; pwd; cd sonr; ls; pwd; starport version; starport chain build -v
 
     - name: move back into root
       run: cd ..
