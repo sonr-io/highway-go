@@ -30,12 +30,12 @@ jobs:
       run: pwd
 
     - name: Issue Release Assets
-      uses: tendermint/starport/actions/cli@develop
+      uses: tendermint/starport/actions/cli@v0.19.5
       with:
           args: version
 
     - name: Issue Release Assets
-      uses: tendermint/starport/actions/cli@develop
+      uses: tendermint/starport/actions/cli@v0.19.5
       with:
           args: -p ./sonr chain build -v
 
