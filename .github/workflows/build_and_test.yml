@@ -37,7 +37,7 @@ jobs:
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@v0.19.5
       with:
-          args: -p ./sonr chain build -v
+          args: -p /github/workspace/sonr chain build
 
     - name: Set up Go
       uses: actions/setup-go@v2
