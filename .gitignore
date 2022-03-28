@@ -205,6 +205,8 @@ build/
 # iOS/XCode related
 **/.env
 **/*.env
+**/*.env.*
+!**/*.env.sample
 **/ios/Frameworks/**.xcframework
 **/ios/fastlane/report.xml
 **/ios/**/*.mode1v3
