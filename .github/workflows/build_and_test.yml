@@ -23,8 +23,8 @@ jobs:
         repository: sonr-io/sonr
         path: sonr
 
-    - name: cd into sonr
-      run: cd sonr
+    - name: LS
+      run: ls
 
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@develop
