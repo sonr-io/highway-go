@@ -29,6 +29,9 @@ jobs:
     - name: pwd
       run: pwd
 
+    - name: cd
+      run: cd sonr
+
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@v0.19.5
       with:
