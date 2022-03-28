@@ -20,6 +20,7 @@ require (
 	github.com/sonr-io/sonr v0.0.0-00010101000000-000000000000
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.0
+	github.com/stripe/stripe-go/v72 v72.93.0
 	github.com/tendermint/starport v0.19.4
 	go.buf.build/grpc/go/sonr-io/highway v1.2.24
 	go.buf.build/grpc/go/sonr-io/sonr v1.2.14
@@ -122,7 +123,6 @@ require (
 	github.com/keybase/go-keychain v0.0.0-20190712205309-48d3d31d256d // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
-	github.com/koesie10/webauthn v0.3.4 // indirect
 	github.com/koron/go-ssdp v0.0.2 // indirect
 	github.com/libp2p/go-addr-util v0.1.0 // indirect
 	github.com/libp2p/go-buffer-pool v0.0.2 // indirect
@@ -223,8 +223,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.7.1 // indirect
-	github.com/stripe/stripe-go v70.15.0+incompatible // indirect
-	github.com/stripe/stripe-go/v72 v72.93.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20200815110645-5c35d600f0ca // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
@@ -234,7 +232,6 @@ require (
 	github.com/tendermint/tendermint v0.34.14 // indirect
 	github.com/tendermint/tm-db v0.6.4 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20201229170055-e5319fda7802 // indirect
-	github.com/ugorji/go/codec v1.1.7 // indirect
 	github.com/urfave/cli v1.22.5 // indirect
 	github.com/whyrusleeping/go-keyspace v0.0.0-20160322163242-5b898ac5add1 // indirect
 	github.com/whyrusleeping/multiaddr-filter v0.0.0-20160516205228-e903e4adabd7 // indirect
@@ -279,7 +276,6 @@ require (
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/cheggaaa/pb.v1 v1.0.28 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
-	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
