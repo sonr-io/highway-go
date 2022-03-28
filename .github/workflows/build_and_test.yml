@@ -1,0 +1,36 @@
+name: Build_and_test_highway
+
+on:
+  push:
+    branches: [ release ]
+  pull_request:
+    branches: [ release ]
+
+jobs:
+
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout highway
+      uses: actions/checkout@v3
+      with:
+        path: highway-go
+
+    - name: Checkout sonr
+      uses: actions/checkout@v3
+      with:
+        repository: sonr-io/sonr
+        path: sonr
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Build
+      run: go build -v main.go
+
+    - name: Test
+      run: go test -v ./...
+
