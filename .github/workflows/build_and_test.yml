@@ -23,29 +23,19 @@ jobs:
         repository: sonr-io/sonr
         path: sonr
 
-    - name: LS
-      run: ls
-
-    - name: pwd
-      run: pwd
-
-    - name: cd
-      run: cd sonr
-
-    - name: Issue Release Assets
-      uses: tendermint/starport/actions/cli@v0.19.5
-      with:
-          args: version
-
-    - name: Issue Release Assets
-      uses: tendermint/starport/actions/cli@v0.19.5
-      with:
-          args: -p /github/workspace/sonr chain build
-
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
         go-version: 1.17
+
+    - name: Install Starport
+      run: curl https://get.starport.network/starport! | bash
+
+    - name: cd into sonr
+      run: cd sonr
+
+    - name: build sonrd
+      run: starport chain build
 
     - name: move back into root
       run: cd ..
