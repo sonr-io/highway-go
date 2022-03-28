@@ -10,6 +10,9 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-latest
+    environment: 
+      name: staging
+      url: ${STAGING_ADDRESS}
     steps:
 
     - name: Checkout highway
@@ -42,8 +45,13 @@ jobs:
     - name: Build
       run: cd highway-go; go mod tidy; go build main.go
 
-    - name: Test
-      run: go test -v ./...
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY }}
+        name: id_rsa # optional
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+        if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
 
-
-
+    - name: copy to staging server
+      run: scp highway-go ${SSH_USER}@${STAGING_ADDRESS}:${HIGHWAY_DEPLOY_LOCATION}/highway-go
