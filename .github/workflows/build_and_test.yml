@@ -31,11 +31,8 @@ jobs:
     - name: Install Starport
       run: curl https://get.starport.network/starport! | bash
 
-    - name: cd into sonr
-      run: cd sonr
-
     - name: build sonrd
-      run: starport chain build
+      run: cd sonr; pwd; starport chain build
 
     - name: move back into root
       run: cd ..
