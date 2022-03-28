@@ -26,6 +26,9 @@ jobs:
     - name: LS
       run: ls
 
+    - name: pwd
+      run: pwd
+
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@develop
       with:
@@ -34,7 +37,7 @@ jobs:
     - name: Issue Release Assets
       uses: tendermint/starport/actions/cli@develop
       with:
-          args: chain build
+          args: -p ./sonr chain build -v
 
     - name: Set up Go
       uses: actions/setup-go@v2
