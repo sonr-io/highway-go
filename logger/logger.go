@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-	"github.com/sonr-io/webauthn.io/config"
+	"github.com/sonr-io/highway-go/config"
 )
 
 // Logger is the main logger that is abstracted in this package.

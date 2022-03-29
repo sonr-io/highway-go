@@ -14,7 +14,7 @@ import (
 	"github.com/duo-labs/webauthn/webauthn"
 	"github.com/jinzhu/gorm"
 
-	log "github.com/sonr-io/webauthn.io/logger"
+	log "github.com/sonr-io/highway-go/logger"
 )
 
 // Credential is the stored credential for Auth

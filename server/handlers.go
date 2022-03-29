@@ -10,9 +10,9 @@ import (
 
 	"github.com/duo-labs/webauthn/webauthn"
 	"github.com/gorilla/mux"
-	"github.com/sonr-io/webauthn.io/config"
-	"github.com/sonr-io/webauthn.io/controller"
-	"github.com/sonr-io/webauthn.io/session"
+	"github.com/sonr-io/highway-go/config"
+	"github.com/sonr-io/highway-go/controller"
+	"github.com/sonr-io/highway-go/session"
 )
 
 // Timeout is the number of seconds to attempt a graceful shutdown, or

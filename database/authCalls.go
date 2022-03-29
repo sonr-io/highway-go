@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/duo-labs/webauthn/webauthn"
-	"github.com/sonr-io/webauthn.io/models"
+	"github.com/sonr-io/highway-go/models"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

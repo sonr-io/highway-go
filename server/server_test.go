@@ -3,8 +3,8 @@ package server
 // import (
 // 	"testing"
 
-// 	"github.com/sonr-io/webauthn.io/config"
-// 	"github.com/sonr-io/webauthn.io/models"
+// 	"github.com/sonr-io/highway-go/config"
+// 	"github.com/sonr-io/highway-go/models"
 // 	"github.com/stretchr/testify/suite"
 // )
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/sonr-io/webauthn.io/session"
+	"github.com/sonr-io/highway-go/session"
 )
 
 // LoginRequired sets a context variable with the user loaded from the user ID

@@ -8,7 +8,7 @@ import (
 
 	"github.com/duo-labs/webauthn/webauthn"
 	"github.com/gorilla/sessions"
-	log "github.com/sonr-io/webauthn.io/logger"
+	log "github.com/sonr-io/highway-go/logger"
 )
 
 // DefaultEncryptionKeyLength is the length of the generated encryption keys

@@ -3,7 +3,7 @@ package models
 // import (
 // 	"testing"
 
-// 	"github.com/sonr-io/webauthn.io/config"
+// 	"github.com/sonr-io/highway-go/config"
 // 	"github.com/stretchr/testify/suite"
 // )
 

@@ -4,10 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/sonr-io/sonr/pkg/p2p"
+	"github.com/sonr-io/core/node"
 	"github.com/tendermint/starport/starport/pkg/cosmosclient"
-	hw "go.buf.build/grpc/go/sonr-io/highway/v1"
-	"go.buf.build/grpc/go/sonr-io/sonr/channel"
+	hw "go.buf.build/grpc/go/sonr-io/core/highway/v1"
 
 	"google.golang.org/grpc"
 )
@@ -15,7 +14,7 @@ import (
 // HighwayStub is the RPC Service for the Custodian Node.
 type HighwayStub struct {
 	hw.HighwayServer
-	Host   p2p.HostImpl
+	Host   node.HostImpl
 	Cosmos cosmosclient.Client
 
 	// Properties
@@ -24,9 +23,6 @@ type HighwayStub struct {
 	Http *http.Server
 
 	// Configuration
-
-	// List of Entries
-	Channels map[string]channel.Channel
 }
 
 //get

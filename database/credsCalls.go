@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/sonr-io/webauthn.io/models"
+	"github.com/sonr-io/highway-go/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

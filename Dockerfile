@@ -3,7 +3,7 @@ RUN apk add git build-base
 WORKDIR /Users/pradn/developer/sonr
 COPY . .
 RUN ls
-WORKDIR /go/src/github.com/sonr-io/webauthn.io
+WORKDIR /go/src/github.com/sonr-io/highway-go
 COPY . .
 RUN go get -d -v ./...
 RUN go build -o webauthn.io
@@ -12,7 +12,7 @@ RUN ls
 
 FROM alpine
 WORKDIR /opt/webauthn.io
-COPY --from=build-env /go/src/github.com/sonr-io/webauthn.io/webauthn.io /opt/webauthn.io/webauthn.io
+COPY --from=build-env /go/src/github.com/sonr-io/highway-go/webauthn.io /opt/webauthn.io/webauthn.io
 COPY ./static/dist static/dist
 COPY ./templates templates/
 COPY ./config.json config.json

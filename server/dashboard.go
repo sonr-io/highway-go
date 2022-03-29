@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/sonr-io/webauthn.io/models"
+	"github.com/sonr-io/highway-go/models"
 )
 
 // Index renders the dashboard index page, displaying the created credential

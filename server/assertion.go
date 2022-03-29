@@ -9,8 +9,8 @@ import (
 	"github.com/duo-labs/webauthn/webauthn"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	log "github.com/sonr-io/webauthn.io/logger"
-	"github.com/sonr-io/webauthn.io/models"
+	log "github.com/sonr-io/highway-go/logger"
+	"github.com/sonr-io/highway-go/models"
 )
 
 // ErrCredentialCloned occurs when an authenticator provides a sign count

@@ -12,15 +12,14 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/sonr-io/webauthn.io/config"
-	"github.com/sonr-io/webauthn.io/controller"
-	db "github.com/sonr-io/webauthn.io/database"
-	"github.com/sonr-io/webauthn.io/logger"
-	log "github.com/sonr-io/webauthn.io/logger"
-	"github.com/sonr-io/webauthn.io/models"
-	"github.com/sonr-io/webauthn.io/pkg/client"
-	"github.com/sonr-io/webauthn.io/server"
-	hw "go.buf.build/grpc/go/sonr-io/highway/v1"
+	n "github.com/sonr-io/core/node"
+	"github.com/sonr-io/highway-go/config"
+	"github.com/sonr-io/highway-go/controller"
+	db "github.com/sonr-io/highway-go/database"
+	"github.com/sonr-io/highway-go/logger"
+	log "github.com/sonr-io/highway-go/logger"
+	"github.com/sonr-io/highway-go/models"
+	"github.com/sonr-io/highway-go/server"
 	"google.golang.org/grpc/credentials"
 
 	"google.golang.org/grpc"
@@ -73,7 +72,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	cosmos, err := client.NewClient(context.Background(), l.Addr().String(), "test", "unimplemented-password")
+	cosmos, err := n.NewCosmos(context.Background(), l.Addr().String(), "test", "unimplemented-password")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,7 +91,7 @@ func main() {
 			Grpc:   grpc.NewServer(),
 			Cosmos: cosmos.Client,
 		}
-		hw.RegisterHighwayServer(stub.Grpc, stub)
+		// hw.RegisterHighwayServer(stub.Grpc, stub)
 		//reflection.RegisterReflection(stub.grpc)
 		//logger.Infof("Starting RPC Service on %s", l.Addr().String())
 	} else {
@@ -103,7 +102,7 @@ func main() {
 			Grpc:   grpc.NewServer(grpc.Creds(credentials)),
 			Cosmos: cosmos.Client,
 		}
-		hw.RegisterHighwayServer(stub.Grpc, stub)
+		// hw.RegisterHighwayServer(stub.Grpc, stub)
 		//reflection.RegisterReflection(stub.grpc)
 		//logger.Infof("Starting RPC Service on %s", l.Addr().String())
 	}

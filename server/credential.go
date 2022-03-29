@@ -12,8 +12,8 @@ import (
 	"github.com/duo-labs/webauthn/protocol"
 	"github.com/duo-labs/webauthn/webauthn"
 	"github.com/gorilla/mux"
-	log "github.com/sonr-io/webauthn.io/logger"
-	"github.com/sonr-io/webauthn.io/models"
+	log "github.com/sonr-io/highway-go/logger"
+	"github.com/sonr-io/highway-go/models"
 	rt "go.buf.build/grpc/go/sonr-io/sonr/registry"
 )
 

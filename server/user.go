@@ -5,8 +5,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	log "github.com/sonr-io/webauthn.io/logger"
-	"github.com/sonr-io/webauthn.io/models"
+	log "github.com/sonr-io/highway-go/logger"
+	"github.com/sonr-io/highway-go/models"
 )
 
 // CreateUser adds a new user to the database

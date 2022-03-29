@@ -11,8 +11,8 @@ package service
 // 	"github.com/kataras/golog"
 // 	"github.com/rs/zerolog"
 // 	"github.com/rs/zerolog/log"
-// 	controller "github.com/sonr-io/webauthn.io/controllers"
-// 	db "github.com/sonr-io/webauthn.io/database"
+// 	controller "github.com/sonr-io/highway-go/controllers"
+// 	db "github.com/sonr-io/highway-go/database"
 // 	rt "go.buf.build/grpc/go/sonr-io/sonr/registry"
 // )
 

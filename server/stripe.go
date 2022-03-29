@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/sonr-io/webauthn.io/models"
+	"github.com/sonr-io/highway-go/models"
 	"github.com/stripe/stripe-go/v72"
 )
 

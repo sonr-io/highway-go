@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 
+	"github.com/denisbrodbeck/machineid"
 	"github.com/spf13/viper"
 )
 
@@ -145,22 +147,71 @@ func (sc *SonrConfig) Save() (*SonrConfig, error) {
 	return sc, nil
 }
 
-// Return the config dir path as a Folder.
-func (sc *SonrConfig) ConfigFolder() Folder {
-	return Folder(sc.ConfigDir)
-}
+func Load() (*SonrConfig, error) {
 
-// Return the home dir path as a Folder.
-func (sc *SonrConfig) HomeFolder() Folder {
-	return Folder(sc.HomeDir)
-}
+	// Get the user home directory.
+	hp, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
 
-// Return the cache dir path as a Folder.
-func (sc *SonrConfig) CacheFolder() Folder {
-	return Folder(sc.CacheDir)
-}
+	// Get user cache directory.
+	tp, err := os.UserCacheDir()
+	if err != nil {
+		return nil, err
+	}
 
-// Create or return the wallet directory as a Folder.
-func (sc *SonrConfig) WalletFolder() Folder {
-	return Folder(sc.WalletDir)
+	// Get the user config directory.
+	sp, err := os.UserConfigDir()
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := machineid.ID()
+	if err != nil {
+		return nil, err
+	}
+
+	// viper setup
+	viper.AddConfigPath("./config/")
+	viper.SetConfigName("app")
+	viper.SetConfigType("env")
+	viper.AutomaticEnv()
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	//TODO burn it down and fix this later
+	// Create the configuration object.
+	config := &SonrConfig{
+		HomeDir:   hp,
+		CacheDir:  tp,
+		ConfigDir: sp,
+		DeviceId:  id,
+		//HighwayAddress:  viper.GetString("highway.address"),
+		HighwayAddress:      viper.GetString("HOST"),
+		GrpcPort:            viper.GetString("GRPC_PORT"),
+		HttpPort:            viper.GetString("HTTP_PORT"),
+		HighwayNetwork:      viper.GetString("highway.network"),
+		MongoUri:            viper.GetString("MONGO_URI"),
+		MongoCollectionName: viper.GetString("MONGO_COLLECTION_NAME"),
+		MongoDbName:         viper.GetString("MONGO_DB_NAME"),
+		SecretKey:           viper.GetString("SECRET_KEY"),
+		DevAccount:          viper.GetString("DEV_ACCOUNT"),
+		SqlName:             viper.GetString("SQL_NAME"),
+		SqlPath:             viper.GetString("SQL_PATH"),
+		RelyingParty:        viper.GetString("RELYING_PARTY"),
+		RPOrigin:            viper.GetString("RP_ORIGIN"),
+		RPPort:              viper.GetString("RP_PORT"),
+		StripeKey:           viper.GetString("STRIPE_KEY"),
+		LibP2PLowWater:      viper.GetInt("libp2p.lowWater"),
+		LibP2PHighWater:     viper.GetInt("libp2p.highWater"),
+		LibP2PRendevouz:     viper.GetString("libp2p.rendevouz"),
+	}
+
+	config.Save()
+
+	return config, nil
 }
